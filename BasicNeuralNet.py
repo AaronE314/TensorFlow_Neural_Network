@@ -60,6 +60,7 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 # add a summary to store the accuracy
 tf.summary.scalar('accuracy', accuracy)
 
+# Update and store summary
 merged = tf.summary.merge_all()
 writer = tf.summary.FileWriter('./Tutorials/Tensorflow/NeuralNet/graphs')
 
@@ -75,8 +76,11 @@ with tf.Session() as sess:
     for epoch in range(epochs):
         avg_cost = 0
         for i in range(total_batch):
+            # Get next data set
             batch_x, batch_y = mnist.train.next_batch(batch_size=batch_size)
+            # Run it through the network, and then optimize it based on result
             _, c = sess.run([optimizer, cross_entropy], feed_dict={x: batch_x, y: batch_y})
+            # Calculate the average cost
             avg_cost += c / total_batch
         print("Epoch:", (epoch + 1), "cost = ", "{:.3f}".format(avg_cost))
         summary = sess.run(merged, feed_dict={x: mnist.test.images, y: mnist.test.labels})
